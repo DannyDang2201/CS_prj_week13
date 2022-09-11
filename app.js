@@ -6,11 +6,76 @@ var squares = document.querySelectorAll('.square');
 var colorDisplay = document.querySelector('#color-display');
 var messageDisplay = document.querySelector('#message');
 var h1 = document.querySelector('h1');
-var resetButton = querySelector('#reset');
-var modeButtons = querySelectorAll('.mode');
-var easyButton = querySelector('.mode');
+var resetButton = document.querySelector('#reset');
+var modeButtons = document.querySelectorAll('.mode');
+var easyButton = document.querySelector('.mode');
 
+init();
 
+function init() {
+    colorDisplay.textContent = pickedColor;
+    setupSquares();
+    setupMode();
+    reset();
+}
+
+resetButton.addEventListener('click', function () {
+    reset();
+})
+
+function setupSquares() {
+    for (let i = 0; i < squares.length; i++) {
+        squares[i].style.backgroundColor = colors[i];
+        squares[i].addEventListener("click", function () {
+            var clickedColor = this.style.backgroundColor;
+            if (clickedColor === pickedColor) {
+                messageDisplay.textContent = "Correct";
+                resetButton.textContent = "Play again";
+                changeColors(pickedColor);
+            }
+            else {
+                this.style.backgroundColor = "#232323";
+                messageDisplay.textContent = "Try again";
+            }
+        });
+    }
+}
+
+function setupMode() {
+    for (let i = 0; i < modeButtons.length; i++) {
+        modeButtons[i].addEventListener("click", function () {
+            for (let i = 0; i < modeButtons.length; i++) {
+                modeButtons[i].classList.remove("selected");
+            }
+            this.classList.add("selected");
+            if (this.textContent === "Easy") {
+                numSquares = 3;
+            }
+            else {
+                numSquares = 6;
+            }
+            reset();
+        });
+    }
+}
+
+function reset() {
+    colors = genRandomColors(numSquares);
+    pickedColor = chooseColor();
+    colorDisplay.textContent = pickedColor;
+    h1.style.backgroundColor = "#3D8361";
+    resetButton.textContent = "New colors";
+    messageDisplay.textContent = "";
+    for (var i = 0; i < squares.length; i++) {
+        if (colors[i]) {
+            squares[i].style.display = "block";
+            squares[i].style.backgroundColor = colors[i];
+        }
+        else {
+            squares[i].style.display = "none";
+        }
+    }
+}
 
 function changeColors(color) {
     for (var i = 0; i < squares.length; i++) {
